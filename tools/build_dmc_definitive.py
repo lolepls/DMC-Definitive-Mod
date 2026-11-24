@@ -41,16 +41,63 @@ import struct
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_v3_english import build as build_english  # noqa: E402
 import dumps  # noqa: E402
 import xver  # noqa: E402
-from build_v3_plus import Image, dump_reader, _Reader  # noqa: E402
+import english  # noqa: E402
 from dmc_sprites import resource_offsets, find_size_table  # noqa: E402
 from dmc_stats import find_get_stat, find_evo_switch  # noqa: E402
 import training as TR  # noqa: E402
 from training import TRAINING, callee_map, relocate_block  # noqa: E402
 from unsp_asm import Asm, SP, R1, R2, R3, R4, BP, self_test  # noqa: E402
 from unsp_dis import decode  # noqa: E402
+
+def w2b(w):
+    return (w - 0x200000) * 2
+
+
+class Image:
+    def __init__(self, data):
+        self.b = bytearray(data)
+        self.log = []
+
+    def rd(self, w):
+        return struct.unpack_from("<H", self.b, w2b(w))[0]
+
+    def wr(self, w, v):
+        struct.pack_into("<H", self.b, w2b(w), v & 0xFFFF)
+
+    def patch(self, w, old, new, why):
+        old = [old] if isinstance(old, int) else old
+        new = [new] if isinstance(new, int) else new
+        cur = [self.rd(w + i) for i in range(len(old))]
+        if cur != old:
+            raise SystemExit("patch %s @%06x: atteso %s, trovato %s"
+                             % (why, w, [hex(x) for x in old], [hex(x) for x in cur]))
+        for i, v in enumerate(new):
+            self.wr(w + i, v)
+        self.log.append("%06x  %-40s %s -> %s" % (w, why, " ".join("%04x" % x for x in old),
+                                                   " ".join("%04x" % x for x in new)))
+
+    def put_words(self, w, words, why):
+        for i, v in enumerate(words):
+            if self.rd(w + i) != 0:
+                raise SystemExit("area non libera a %06x (%s)" % (w + i, why))
+            self.wr(w + i, v)
+        self.log.append("%06x  %-40s %d word" % (w, why, len(words)))
+
+
+def dump_reader(raw):
+    return lambda w: struct.unpack_from("<H", raw, w2b(w))[0]
+
+
+class _Reader:
+    """Adapter: find_get_stat() wants an object with .read(word_address)."""
+    def __init__(self, raw):
+        self.raw = raw
+
+    def read(self, w):
+        return struct.unpack_from("<H", self.raw, w2b(w))[0]
+
 
 NFIELDS = 17
 FRAMES = 15
@@ -512,9 +559,8 @@ def build(paths, check=True):
             dumps.check(k, p)
     xver.P.update({k: os.path.abspath(p) for k, p in paths.items()})    # cross-version matching reads these
     xver._cache.clear()
-    data, log = build_english(paths["V3"], False, False)
-    img = Image(data)
-    img.log += log
+    img = Image(open(paths["V3"], "rb").read())
+    img.log += english.apply(img.b)
     vers = {k: Version(k, p) for k, p in paths.items()}
     v3 = _v3_from_image(img)
     assert len(v3.offs) == V3_NSPR and v3.n == 20

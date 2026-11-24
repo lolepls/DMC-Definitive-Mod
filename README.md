@@ -208,15 +208,13 @@ python3 tools/build_dmc_definitive.py V1.bin V2.bin V3.bin V4.bin V5.bin dmc_def
 python3 tools/test_dmc_definitive.py dmc_definitive.bin V1.bin V2.bin V3.bin V4.bin V5.bin
 ```
 
-The image keeps the save area of the Ver.3 dump you pass in. Two smaller builds from earlier stages are
-still available: `tools/build_v3_english.py V3.bin OUT.bin` (Ver.3 in English) and
-`tools/build_v3_plus.py V1.bin V3.bin OUT.bin` (Ver.3 English with the Ver.1 line).
+The image keeps the save area of the Ver.3 dump you pass in.
 
 To change the translation, edit the PNG files in `english/` keeping their size, then rebuild.
 
 | Path | Content |
 |---|---|
-| `tools/build_*.py` | build scripts |
+| `tools/build_dmc_definitive.py` | build script |
 | `tools/training.py` | per-line training, battles, link and jogress |
 | `tools/dumps.py` | expected firmware hashes |
 | `tools/english.py`, `english/` | translated text sprites |
