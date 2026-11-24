@@ -18,7 +18,6 @@ dumps of your own devices (see [Building](#building)).
 
 - [Getting started](#getting-started)
 - [Choosing an egg](#choosing-an-egg)
-- [The five lines](#the-five-lines)
 - [Caring for your Digimon](#caring-for-your-digimon)
 - [Death and the next egg](#death-and-the-next-egg)
 - [Evolution](#evolution)
@@ -51,19 +50,6 @@ When a new egg appears (after a reset or after your Digimon dies), the hatching 
 
 - After a **reset** the choice starts from the Ver.1 egg.
 - After a **death** it starts from the egg of the line you just raised.
-
-## The five lines
-
-Each egg starts the line of one original version. The line decides everything about that Digimon:
-evolutions, training, background and jogress partners.
-
-| Egg | Baby I → Baby II | Ultimates (stage VI) | Jogress (stage VI+) |
-|---|---|---|---|
-| Ver.1 | Botamon → Koromon | Blitz Greymon, Bancho Mamemon, Shin Monzaemon | Omegamon Alter-S |
-| Ver.2 | Punimon → Tsunomon | Skull Mammon, Cres Garurumon, Ebemon | Omegamon Alter-S |
-| Ver.3 | Poyomon → Tokomon | Hi Andromon, Gokumon, Bancho Leomon | Chaosmon, Millenniumon |
-| Ver.4 | Yuramon → Tanemon | Darkdramon, Bloom Lordmon, Gankoomon | Chaosmon, Chaosdramon |
-| Ver.5 | Zurumon → Pagumon | Mugendramon, Raidenmon, Gaioumon | Chaosdramon, Millenniumon |
 
 ## Caring for your Digimon
 
