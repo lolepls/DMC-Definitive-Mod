@@ -236,8 +236,8 @@ COUNT_OF = {k: v["count"] for k, v in TRAINING.items()}
 
 # --------------------------------------------------------------------------- battle series
 # Solo battle (screen 10): 8 areas x 5 (opponent id, power) pairs, 0xFFFF ends an area. The ids are
-# local to each version. Each line gets its version's table with the ids moved to the line's range;
-# the three places that load the V3 table address call bt_tab instead.
+# local to each version. Each version's table is copied with the ids moved to its line's range; the
+# three places that load the V3 table address call bt_roll / bt_tab, which pick a random version per area.
 BATTLE = {"V1": 0x20612F, "V2": 0x206022, "V3": 0x206B27, "V4": 0x206A37, "V5": 0x206A4C}
 BATTLE_WORDS = 80
 V3_BATTLE_AT = (0x206CF3, 0x207225, 0x20724B)     # `r4 = 0x6b27 ; [bp+n] = r4 ; r4 = 0x20`
@@ -253,13 +253,43 @@ def battle_table(rd, name, base, count):
     return words
 
 
-def battle_helper(a, lines, tables):
-    """bt_tab: r4 = lo, r3 = segment of the pet line's battle table (V3 by default)."""
+BT_VERSION = 0x0D15     # free RAM word: version rolled for the current area series (0..4, see VERSION_NO)
+BT_ROLL_COUNT = 0x0861  # opponents counted so far by the area-confirm loop (0 on its first pass)
+
+
+def battle_helper(a, lines, tables, rnd):
+    """Random battle series: each time an area is entered, its opponents come from a random version.
+
+    bt_roll (area-confirm loop, 0x206CF3): on the loop's first pass rolls random(5) into BT_VERSION.
+    bt_tab (all three sites): r4 = lo, r3 = segment of the rolled version's table, whose ids are
+    already moved to that version's line; area k stays area k, so the stages stay coherent.
+    An invalid BT_VERSION falls back to the pet line's own table (V3 by default).
+    """
     def ret(t):
         a.ld(R4, imm=t & 0xFFFF)
         a.ld(R3, imm=t >> 16)
         a.retf()
-    _by_line(a, "bt_tab", lines, lambda line: ret(tables[line]), lambda: ret(BATTLE["V3"]))
+    every = dict(tables, V3=BATTLE["V3"])
+    a.label("bt_roll")
+    a.ld(R4, imm=BT_ROLL_COUNT)
+    a.ldi(R4, R4)
+    a.cmp(R4, 0)
+    a.j("jne", "bt_tab")
+    a.ld(R3, imm=len(VERSION_NO))
+    a.push(R3)
+    a.call(rnd)
+    a.sp_add(1)
+    a.ld(R3, imm=BT_VERSION)
+    a.sti(R1, R3)
+    a.label("bt_tab")
+    a.ld(R4, imm=BT_VERSION)
+    a.ldi(R4, R4)
+    for name, no in sorted(VERSION_NO.items(), key=lambda kv: kv[1]):
+        a.cmp(R4, no)
+        a.j("jne", "bt_v%d" % no)
+        ret(every[name])
+        a.label("bt_v%d" % no)
+    _by_line(a, "bt_line", lines, lambda line: ret(tables[line]), lambda: ret(BATTLE["V3"]))
 
 
 # ---------------------------------------------------------------- link identity and jogress

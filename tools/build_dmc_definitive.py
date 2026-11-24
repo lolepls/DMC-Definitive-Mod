@@ -19,8 +19,10 @@ Everything is built from the original dumps (plus the English text sprites in en
   evolution  the call to the V3 switch goes through a wrapper that picks the line and runs a
              relocated copy of that version's switch (id - base, then + base).
   sprites    draw_sprite() remaps the version-specific sprites of the current Digimon's line.
-  battles    the solo battle areas (8 x 5 opponent/power pairs) come from the pet line's version,
-             with the opponent ids moved to that line (bt_tab replaces the V3 table address).
+  battles    every time an area is entered, a random version (one of five) is rolled into RAM
+             0x0D15 and the whole series of that area comes from its table (8 x 5 opponent/power
+             pairs), with the opponent ids moved to that version's line (bt_roll / bt_tab replace
+             the V3 table address).
   training   screen 8 (training) picks init, handler count and handler table by the pet's line:
              V1/V2/V4/V5 lines play their own version's minigame, copied from that dump to word
              0x212000+ with calls remapped to the matching V3 functions (tools/training.py). The
@@ -687,7 +689,7 @@ def build(paths, check=True):
         pos += len(words)
     ta = Asm(pos)
     TR.helpers(ta, tr_lines, tables, speeds, TR.RANDOM)
-    TR.battle_helper(ta, tr_lines, bt_tables)
+    TR.battle_helper(ta, tr_lines, bt_tables, TR.RANDOM)
     TR.link_helpers(ta, lines, {n: v.rd for n, v in vers.items()})
     tw += ta.assemble()
     if TRAIN_ORG + len(tw) > TRAIN_END or any(img.rd(TRAIN_ORG + k) for k in range(len(tw))):
@@ -737,7 +739,8 @@ def build(paths, check=True):
         n = img.rd(w + 2)
         assert n & 0xFFC0 == 0xD800, hex(n)
         img.patch(w, [0x990C, TR.BATTLE["V3"] & 0xFFFF, n, 0x9860],
-                  far(0xF040, ta.labels["bt_tab"]) + [n, 0x9903], "battaglia: serie di avversari per linea")
+                  far(0xF040, ta.labels["bt_roll" if w == TR.V3_BATTLE_AT[0] else "bt_tab"]) + [n, 0x9903],
+                  "battaglia: serie di avversari da una versione casuale")
     tl = ta.labels
     img.patch(TR.LK_START, [0x9642, 0xFE00, 0x990C, 0x0CF5, 0xD6E4], far(0xF040, tl["lk_ver"]) + [0xFE00] * 3,
               "collegamento: versione = linea del Digimon")

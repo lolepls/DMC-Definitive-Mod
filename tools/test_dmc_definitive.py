@@ -390,22 +390,49 @@ def main():
     print("allenamento: ok (tabelle/init/conteggi per linea; sessioni complete %s)"
           % ", ".join("%s %d/4 casuali vinte" % (k, v[0]) for k, v in results.items()))
 
-    # ---------------- solo battle series per line
-    bt_tab = tgt(TR.V3_BATTLE_AT[0])
-    check(all(tgt(w) == bt_tab for w in TR.V3_BATTLE_AT), "battaglia: hook")
+    # ---------------- random solo battle series
+    bt_roll, bt_tab = (tgt(w) for w in TR.V3_BATTLE_AT[:2])
+    check(tgt(TR.V3_BATTLE_AT[2]) == bt_tab and bt_roll != bt_tab, "battaglia: hook")
     base_of = {n: b for n, (b, c) in LINES.items()}
-    nfight = 0
-    for idv in range(94):
-        line = line_of(idv)
-        s = new_sim(img)
-        s.wr(ID, idv)
-        run(s, bt_tab)
-        t = s.r[3] << 16 | s.r[4]
+    vname = {v: n for n, v in TR.VERSION_NO.items()}
+
+    def exp_table(line):
         orig = [vers[line].rd(TR.BATTLE[line] + k) for k in range(TR.BATTLE_WORDS)]
-        got = [rdw(t + k) for k in range(TR.BATTLE_WORDS)]
-        exp = [w + base_of[line] if k % 2 == 0 and w != 0xFFFF else w for k, w in enumerate(orig)]
-        check(got == exp, "battaglia: tabella id %d (%s)" % (idv, line))
-    for line, idv in (("V3", 5), ("V1", 25), ("V2", 40), ("V4", 60), ("V5", 80)):
+        return [w + base_of[line] if k % 2 == 0 and w != 0xFFFF else w for k, w in enumerate(orig)]
+    for idv in range(94):                         # bt_tab: rolled version, or the line's own if invalid
+        for ver in list(range(5)) + [5, 0xFFFF]:
+            line = vname.get(ver, line_of(idv))
+            s = new_sim(img)
+            s.wr(ID, idv)
+            s.wr(TR.BT_VERSION, ver)
+            run(s, bt_tab)
+            t = s.r[3] << 16 | s.r[4]
+            check([rdw(t + k) for k in range(TR.BATTLE_WORDS)] == exp_table(line),
+                  "battaglia: tabella id %d versione %#x" % (idv, ver))
+    rolls = {}
+    for idv in (5, 25, 40, 60, 80):               # area confirm: one roll of random(5), count from that table
+        for ver in range(5):
+            for area in range(8):
+                s = new_sim(img)
+                calls = []
+                s.rom[TR.RANDOM] = lambda sim, v=ver: (calls.append(sim.ram[sim.r[0] + 3]), sim.r.__setitem__(1, v))
+                s.wr(ID, idv)
+                s.wr(0x085C, area)
+                s.wr(TR.BT_VERSION, 0xFFFF)
+                s.cs, s.pc = 0x20, 0x6CE3
+                for _ in range(5000):
+                    if s.addr == 0x206D23:
+                        break
+                    s.step()
+                check(s.addr == 0x206D23, "battaglia: ciclo di conteggio non terminato")
+                tab = exp_table(vname[ver])[area * 10:area * 10 + 10]
+                n = next((k for k in range(5) if tab[2 * k] == 0xFFFF), 5)
+                check(calls == [5] and s.ram[TR.BT_VERSION] == ver and s.ram[0x0861] == n,
+                      "battaglia: ingresso area %d id %d versione %d: %s %d %d"
+                      % (area, idv, ver, calls, s.ram[TR.BT_VERSION], s.ram[0x0861]))
+                rolls[ver] = rolls.get(ver, 0) + 1
+    nfight = 0
+    for line in TR.BATTLE:                        # series: every opponent of every version, any pet line
         for area in range(8):
             for slot in range(5):
                 k = TR.BATTLE[line] + area * 10 + slot * 2
@@ -416,7 +443,8 @@ def main():
                 for f in (0x200069, 0x2072F5, 0x202724, 0x20267C, 0x207CC6, 0x2075FC, 0x20B78E, 0x20B7C9,
                           0x2026BE, 0x20284F, 0x2092B2, 0x203B88):
                     s.rom[f] = lambda sim: sim.r.__setitem__(1, 0)
-                s.wr(ID, idv)
+                s.wr(ID, (5, 25, 40, 60, 80)[nfight % 5])
+                s.wr(TR.BT_VERSION, TR.VERSION_NO[line])
                 s.wr(0x085C, area)
                 s.wr(0x085D, slot)
                 s.wr(0x0C8A, 1)
@@ -425,7 +453,8 @@ def main():
                 check(s.ram[0x0CFA] == opp + base_of[line] and s.ram[0x0CFB] == power,
                       "battaglia %s area %d avversario %d: %d/%d" % (line, area, slot, s.ram[0x0CFA], s.ram[0x0CFB]))
                 nfight += 1
-    print("battaglie: ok (serie per linea, %d avversari verificati con 0x2071F8)" % nfight)
+    print("battaglie: ok (versione casuale per area: %d ingressi, %d avversari verificati con 0x2071F8)"
+          % (sum(rolls.values()), nfight))
     # ---------------- link identity and jogress
     import training as TR
     tgt = lambda w: ((rdw(w) & 0x3F) << 16) | rdw(w + 1)  # noqa: E731

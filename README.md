@@ -6,8 +6,9 @@ together on one device:
 - **English text**;
 - **all 94 Digimon of Ver.1–5**, each line raised with its own version's rules;
 - **egg choice** every time a new egg hatches;
-- for every line, the **evolutions, training minigame, battle opponents, backgrounds and jogress**
-  of its original version;
+- for every line, the **evolutions, training minigame, backgrounds and jogress** of its original
+  version;
+- **random battle series**: every area draws its opponents from one of the five versions;
 - **link battles** with any Digital Monster Color, original or modded.
 
 This repository contains **no Bandai firmware, code or graphics**: you build the image yourself from
@@ -54,7 +55,7 @@ When a new egg appears (after a reset or after your Digimon dies), the hatching 
 ## The five lines
 
 Each egg starts the line of one original version. The line decides everything about that Digimon:
-evolutions, training, battle opponents, background and jogress partners.
+evolutions, training, background and jogress partners.
 
 | Egg | Baby I → Baby II | Ultimates (stage VI) | Jogress (stage VI+) |
 |---|---|---|---|
@@ -132,9 +133,16 @@ line's version:
 
 ## Battles
 
-Single battles use the opponents of the line's version: 8 areas of up to 5 opponents, unlocked as you
-win. Opponents and their power differ between versions: for example the first opponents of the Ver.1 and
-Ver.2 lines are stronger than those of the Ver.3, 4 and 5 lines.
+Single battles are played in 8 areas of up to 5 opponents, unlocked as you win.
+
+- **Every time you enter an area**, the device picks one of the five versions at random, with the same
+  chance for each, your own line's version included. The whole series of that area comes from that
+  version: its opponents, their power and how many they are.
+- The **areas keep their difficulty**: area 1 always holds the first opponents of the chosen version, area
+  8 its last ones. Only the version changes, so the stages stay coherent.
+- Leaving an area and entering it again draws a new version. Unlocking the next area works as usual.
+- Opponents and their power differ between versions: for example the first opponents of Ver.1 and Ver.2
+  are stronger than those of Ver.3, 4 and 5.
 
 How a battle is decided:
 
@@ -184,7 +192,7 @@ The partner can be an original device of that version, or another DMC Definitive
 - The game runs on the Ver.3 engine: the settings adjust the **screen brightness** (Ver.1 and Ver.2
   originally adjusted the volume instead).
 - **Tested on real hardware** so far: start-up, English text, egg choice, hatching, evolutions and the
-  sprites of all lines. Training, battle series, link battles and jogress of the non-Ver.3 lines are
+  sprites of all lines. Training, random battle series, link battles and jogress of the non-Ver.3 lines are
   checked in a simulator against the original code; reports from real devices are welcome.
 
 ## Building
@@ -215,7 +223,7 @@ To change the translation, edit the PNG files in `english/` keeping their size, 
 | Path | Content |
 |---|---|
 | `tools/build_dmc_definitive.py` | build script |
-| `tools/training.py` | per-line training, battles, link and jogress |
+| `tools/training.py` | per-line training, random battles, link and jogress |
 | `tools/dumps.py` | expected firmware hashes |
 | `tools/english.py`, `english/` | translated text sprites |
 | `tools/unsp_dis.py`, `unsp_asm.py`, `unsp_sim.py` | μ'nSP disassembler, assembler and simulator |
