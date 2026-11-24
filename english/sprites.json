@@ -1,0 +1,128 @@
+[
+ {
+  "png": "v1_0121.png",
+  "v1_sprite": 121,
+  "width": 96,
+  "height": 48,
+  "japanese_sha1": "7c7f5bbc3da482fcba82adedfe2b4f90a907da1a"
+ },
+ {
+  "png": "v1_0124.png",
+  "v1_sprite": 124,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "1ddee0ebeada17ed3cbb84e4de8dee3c1bb58612"
+ },
+ {
+  "png": "v1_0495.png",
+  "v1_sprite": 495,
+  "width": 24,
+  "height": 48,
+  "japanese_sha1": "738f292f8565dec07b7fcc3680332708757df494"
+ },
+ {
+  "png": "v1_0496.png",
+  "v1_sprite": 496,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "0fe023a1d376fdc590b302c7bb2d6995b597efc6"
+ },
+ {
+  "png": "v1_0497.png",
+  "v1_sprite": 497,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "2adf93a555b3cec9ef2dd71fa26b9d82a9c35db4"
+ },
+ {
+  "png": "v1_0498.png",
+  "v1_sprite": 498,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "93fbe9378d90a3b9e36c0f024cdf6ec7ec0b3d7e"
+ },
+ {
+  "png": "v1_0499.png",
+  "v1_sprite": 499,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "50bd55e630a70896fe4c7b0c386c60f58f4021d1"
+ },
+ {
+  "png": "v1_0500.png",
+  "v1_sprite": 500,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "b60ee32d2dc43ebabf6b0e803dc380250b294f80"
+ },
+ {
+  "png": "v1_0511.png",
+  "v1_sprite": 511,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "79c4559c4abdc2f5761de358c68636b3a9c5c8fc"
+ },
+ {
+  "png": "v1_0512.png",
+  "v1_sprite": 512,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "3030477e13d0b915779f6336329831dd67ebafb0"
+ },
+ {
+  "png": "v1_0513.png",
+  "v1_sprite": 513,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "095a9a5a01d3b3337cf7f631db839e0fb763f9a6"
+ },
+ {
+  "png": "v1_0514.png",
+  "v1_sprite": 514,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "0b9a4e0c2518816f6790ec37a25044053f03e0ff"
+ },
+ {
+  "png": "v1_0515.png",
+  "v1_sprite": 515,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "9b19188a19d7ba414f0a10c83980319a29a80033"
+ },
+ {
+  "png": "v1_0516.png",
+  "v1_sprite": 516,
+  "width": 72,
+  "height": 78,
+  "japanese_sha1": "711c55873fe9984dfe7c0300f7e6cac8e36076cd"
+ },
+ {
+  "png": "v1_0517.png",
+  "v1_sprite": 517,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "5a4eb11426335f1140d37b21836a9a7fc04b0ed8"
+ },
+ {
+  "png": "v1_0520.png",
+  "v1_sprite": 520,
+  "width": 72,
+  "height": 48,
+  "japanese_sha1": "138cfea7878dcad50f49f3b33c06c120955b0240"
+ },
+ {
+  "png": "v1_0521.png",
+  "v1_sprite": 521,
+  "width": 72,
+  "height": 78,
+  "japanese_sha1": "395818c0feb451227ec202922b4976ffca5c03c1"
+ },
+ {
+  "png": "v1_0522.png",
+  "v1_sprite": 522,
+  "width": 96,
+  "height": 24,
+  "japanese_sha1": "dd6957aa46a528fadb4643975bdfec91b0b7307c"
+ }
+]

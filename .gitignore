@@ -1,0 +1,9 @@
+# Firmware dumps and builds contain Bandai code and graphics: never commit them.
+*.bin
+*.zip
+DUMPS/
+BUILD/
+
+__pycache__/
+*.pyc
+.DS_Store
