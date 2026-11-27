@@ -1,9 +1,5 @@
 # DMC Definitive
 
-<p align="center">
-  <img src="docs/egg-choice.gif" alt="Choosing an egg on a Digital Monster Color running DMC Definitive" width="400">
-</p>
-
 A firmware mod for the Bandai **Digital Monster Color** virtual pet that brings the five versions
 together on one device:
 
@@ -45,8 +41,11 @@ dumps of your own devices (see [Building](#building)).
 
 ## Choosing an egg
 
-When a new egg appears (after a reset or after your Digimon dies), the hatching screen lets you pick it,
-as in the animation at the top of this page:
+When a new egg appears (after a reset or after your Digimon dies), the hatching screen lets you pick it:
+
+<p align="center">
+  <img src="docs/egg-choice.gif" alt="Choosing an egg on a Digital Monster Color running DMC Definitive" width="400">
+</p>
 
 | Button | Action |
 |---|---|
