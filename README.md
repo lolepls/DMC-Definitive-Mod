@@ -134,6 +134,11 @@ Single battles are played in 8 areas of up to 5 opponents, unlocked as you win.
 - Opponents and their power differ between versions: for example the first opponents of Ver.1 and Ver.2
   are stronger than those of Ver.3, 4 and 5.
 
+<p align="center">
+  <img src="docs/random-battles.gif" alt="Two entries into Stage 1: Agumon meets Palmon from Ver.4, then Betamon from Ver.1" width="400">
+  <br><em>Entering Stage 1 twice with an Agumon: Palmon (Ver.4) the first time, Betamon (Ver.1) the second.</em>
+</p>
+
 How a battle is decided:
 
 - **Power** comes from the species, with a bonus when the strength hearts are full (Child +5, Adult +8,
@@ -224,6 +229,6 @@ To change the translation, edit the PNG files in `english/` keeping their size, 
 
 Digimon and Digital Monster Color are trademarks of Bandai. This is an unofficial fan project, not
 affiliated with or endorsed by Bandai, and it contains none of their firmware or graphic files; the
-animation in `docs/` is footage of a real device running the mod. Flash at your
+animations in `docs/` are footage of a real device running the mod. Flash at your
 own risk. The scripts, this guide and the translated sprites are released under the MIT license (see
 [LICENSE](LICENSE)).
